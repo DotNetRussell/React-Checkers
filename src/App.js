@@ -20,7 +20,7 @@ function App() {
       "isKing": false,
       "isCaptured": false
     },
-        {
+    {
       "player": "1",
       "location": [0, 5],
       "isKing": false,
@@ -160,7 +160,7 @@ function App() {
     <div className="App">
       <center>
       <h1>React Checker Game</h1>
-        <CheckerBoard playerPieces={pieces} />
+        <CheckerBoard playerPieces={pieces} setPieces={setPieces} />
       </center>
     </div>
   );
