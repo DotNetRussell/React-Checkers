@@ -92,7 +92,7 @@ function CheckerBoard({ playerPieces, setPieces }) {
       let adjacentSpaceLower = startingSpace + 7;
       let adjacentSpaceUpper = startingSpace + 9;
 
-      if (endingSpace == adjacentSpaceLower) {
+      if (parseInt(endingSpace) === adjacentSpaceLower) {
         console.log("Moving space to adjacent lower space")
         setPieces(playerPieces.map((piece) => {
           if (piece === playerPiece) {
@@ -103,9 +103,10 @@ function CheckerBoard({ playerPieces, setPieces }) {
             piece.location = [row, column];
             playerWasMoved = true;
           }
+          return piece;
         }));
       }
-      else if (endingSpace == adjacentSpaceUpper) {
+      else if (parseInt(endingSpace) === adjacentSpaceUpper) {
         console.log("Moving space to adjacent upper space")
         setPieces(playerPieces.map((piece) => {
           if (piece === playerPiece) {
@@ -116,6 +117,7 @@ function CheckerBoard({ playerPieces, setPieces }) {
             piece.location = [row, column];
             playerWasMoved = true;
           }
+          return piece;
         }));
       }
     }
@@ -123,7 +125,7 @@ function CheckerBoard({ playerPieces, setPieces }) {
       let adjacentSpaceLower = startingSpace - 7;
       let adjacentSpaceUpper = startingSpace - 9;
 
-      if (endingSpace == adjacentSpaceLower) {
+      if (parseInt(endingSpace) === adjacentSpaceLower) {
         console.log("Moving space to adjacent lower space")
         setPieces(playerPieces.map((piece) => {
           if (piece === playerPiece) {
@@ -134,9 +136,10 @@ function CheckerBoard({ playerPieces, setPieces }) {
             piece.location = [row, column];
             playerWasMoved = true;
           }
+          return piece;
         }));
       }
-      else if (endingSpace == adjacentSpaceUpper) {
+      else if (parseInt(endingSpace) === adjacentSpaceUpper) {
         console.log("Moving space to adjacent upper space")
         setPieces(playerPieces.map((piece) => {
           if (piece === playerPiece) {
@@ -147,6 +150,7 @@ function CheckerBoard({ playerPieces, setPieces }) {
             piece.location = [row, column];
             playerWasMoved = true;
           }
+          return piece;
         }));
       }
     }
@@ -235,11 +239,13 @@ function CheckerBoard({ playerPieces, setPieces }) {
     for (var x = 0; x < cells.length; x++) {
       cells[x].onclick = onCellSelected;
     }
+    document.getElementById("start-button").style.display = "none";
+    console.log("GAME-STARTED");
   }
 
   return (
     <div>
-      <button className="start-button" onClick={startGame}>Start Game</button>
+      <button id="start-button" className="start-button" onClick={startGame}>Start Game</button>
       <table>
         <tbody>
           <tr id="row-0" className="even-row"><td className="even-space"></td><td className="odd-space"></td><td className="even-space"></td><td className="odd-space"></td><td className="even-space"></td><td className="odd-space"></td><td className="even-space"></td><td className="odd-space"></td></tr>
