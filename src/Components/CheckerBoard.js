@@ -64,39 +64,93 @@ function CheckerBoard({ playerPieces, setPieces }) {
       }
 
     }
+    else if (parseInt(_playersTurn) === 2) {
+      let adjacentSpaceLower = pieceCell - 7;
+      let adjacentSpaceUpper = pieceCell - 9;
+      let lowerAdjacentCell = document.getElementById(adjacentSpaceLower);
+      let upperAdjacentcell = document.getElementById(adjacentSpaceUpper);
+
+      // is testSpace adjacent and in the correct direction 
+      // is testSpace empty
+      if (selectedCell === lowerAdjacentCell.id && lowerAdjacentCell.children.length === 0) {
+        canPlayerMove = true;
+      }
+      else if (selectedCell === upperAdjacentcell.id && upperAdjacentcell.children.length === 0) {
+        canPlayerMove = true;
+      }
+    }
+
 
     console.log("Player allowed to move to selected space: " + canPlayerMove);
     return canPlayerMove;
   }
 
   function movePlayer(playerPiece, startingSpace, endingSpace) {
+    let playerWasMoved = false;
 
-    let adjacentSpaceLower = startingSpace + 7;
-    let adjacentSpaceUpper = startingSpace + 9;
-    if (endingSpace == adjacentSpaceLower) {
-      console.log("Moving space to adjacent lower space")
-      setPieces(playerPieces.map((piece) => {
-        if (piece === playerPiece) {
-          let [row, column] = piece.location;
-          row = row + 1;
-          column = column - 1;
-          console.log("Adjusting piece location: " + row + " " + column);
-          piece.location = [row, column];
-        }
-      }));
+    if (parseInt(_playersTurn) === 1) {
+      let adjacentSpaceLower = startingSpace + 7;
+      let adjacentSpaceUpper = startingSpace + 9;
+
+      if (endingSpace == adjacentSpaceLower) {
+        console.log("Moving space to adjacent lower space")
+        setPieces(playerPieces.map((piece) => {
+          if (piece === playerPiece) {
+            let [row, column] = piece.location;
+            row = row + 1;
+            column = column - 1;
+            console.log("Adjusting piece location: " + row + " " + column);
+            piece.location = [row, column];
+            playerWasMoved = true;
+          }
+        }));
+      }
+      else if (endingSpace == adjacentSpaceUpper) {
+        console.log("Moving space to adjacent upper space")
+        setPieces(playerPieces.map((piece) => {
+          if (piece === playerPiece) {
+            let [row, column] = piece.location;
+            row = row + 1;
+            column = column + 1;
+            console.log("Adjusting piece location: " + row + " " + column);
+            piece.location = [row, column];
+            playerWasMoved = true;
+          }
+        }));
+      }
     }
-    else if (endingSpace == adjacentSpaceUpper) {
-      console.log("Moving space to adjacent upper space")
-      setPieces(playerPieces.map((piece) => {
-        if (piece === playerPiece) {
-          let [row, column] = piece.location;
-          row = row + 1;
-          column = column + 1;
-          console.log("Adjusting piece location: " + row + " " + column);
-          piece.location = [row, column];
-        }
-      }));
+    else if (parseInt(_playersTurn) === 2) {
+      let adjacentSpaceLower = startingSpace - 7;
+      let adjacentSpaceUpper = startingSpace - 9;
+
+      if (endingSpace == adjacentSpaceLower) {
+        console.log("Moving space to adjacent lower space")
+        setPieces(playerPieces.map((piece) => {
+          if (piece === playerPiece) {
+            let [row, column] = piece.location;
+            row = row - 1;
+            column = column + 1;
+            console.log("Adjusting piece location: " + row + " " + column);
+            piece.location = [row, column];
+            playerWasMoved = true;
+          }
+        }));
+      }
+      else if (endingSpace == adjacentSpaceUpper) {
+        console.log("Moving space to adjacent upper space")
+        setPieces(playerPieces.map((piece) => {
+          if (piece === playerPiece) {
+            let [row, column] = piece.location;
+            row = row - 1;
+            column = column - 1;
+            console.log("Adjusting piece location: " + row + " " + column);
+            piece.location = [row, column];
+            playerWasMoved = true;
+          }
+        }));
+      }
     }
+    
 
     ReactDOM.unmountComponentAtNode(document.getElementById(startingSpace));
 
@@ -104,7 +158,8 @@ function CheckerBoard({ playerPieces, setPieces }) {
     let checker = React.createElement(Checker, { color: playerPiece.player === "1" ? "red" : "black" }, '');
     ReactDOM.render(checker, document.getElementById(cells[endingSpace].id));
 
-    console.log("Player moved");
+    console.log("Player was moved: " + playerWasMoved);
+    return playerWasMoved;
   }
 
 
@@ -123,7 +178,7 @@ function CheckerBoard({ playerPieces, setPieces }) {
     // A cell with a checker in it was selected
     if (cell.children.length > 0) {
 
-      let [playerPiece, checkerCell] = getPlayerPiece(cellSelectedId);
+      let [playerPiece, ] = getPlayerPiece(cellSelectedId);
       if (canPlayerMoveChecker(playerPiece)) {
         console.log("Cell has Checker and it's correct player");
         cell.style.backgroundColor = "lightgreen";
@@ -160,9 +215,15 @@ function CheckerBoard({ playerPieces, setPieces }) {
         if (playerPiece !== null && canPlayerMoveChecker(playerPiece)
           && canCheckerMoveToSelectedSpace(checkerCell, emptySelectedCell, playerPiece)) {
           console.log("Player can move");
-          movePlayer(playerPiece, checkerCell, emptySelectedCell);
-          document.getElementById(_selectedCell).style.backgroundColor = "lightgray";
-          _selectedCell = -1;
+          let playerWasMoved = movePlayer(playerPiece, checkerCell, emptySelectedCell);
+
+          if (playerWasMoved) {
+            document.getElementById(_selectedCell).style.backgroundColor = "lightgray";
+            _selectedCell = -1;
+
+            _playersTurn = _playersTurn === 1 ? 2 : 1;
+            console.log("Player changed to player: " + _playersTurn);
+          }
         }
       }
     }
