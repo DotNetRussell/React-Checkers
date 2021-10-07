@@ -11,3 +11,56 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+table {
+    border: solid;
+    border-color: black;
+}
+
+td {
+    border: solid;
+    border-color: black;
+}
+
+.even-row .even-space {
+    height: 100px;
+    width: 100px;
+    background-color: red;
+}
+
+.even-row .odd-space {
+    height: 100px;
+    width: 100px;
+    background-color: lightgray;
+}
+
+
+.odd-row .even-space {
+    height: 100px;
+    width: 100px;
+    background-color: lightgray;
+}
+
+.odd-row .odd-space {
+    height: 100px;
+    width: 100px;
+    background-color: red;
+}
+
+.checker {
+    height: 75px;
+    width: 75px;
+    margin-left: 7px;
+    border-radius: 50%;
+    display: inline-block;
+    border-color: darkgrey;
+    border-width: thick;
+    border-style: solid;
+}
+
+.start-button {
+    width: 150px;
+    height: 50px;
+    background-color: greenyellow;
+    margin: 5px;
+}

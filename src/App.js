@@ -1,23 +1,167 @@
-import logo from './logo.svg';
-import './App.css';
+import CheckerBoard from './Components/CheckerBoard'
+import React, { useState } from 'react';
+
+/* 
+ * Player pieces will be an array of piece objects
+ * Piece object will be an object with { Player, Location, King, Captured }
+ * */
 
 function App() {
-  return (
+  const [pieces, setPieces] = useState([
+    {
+      "player": "1",
+      "location": [0, 1],
+      "isKing": false,
+      "isCaptured": false
+    },
+    {
+      "player": "1",
+      "location": [0, 3],
+      "isKing": false,
+      "isCaptured": false
+    },
+        {
+      "player": "1",
+      "location": [0, 5],
+      "isKing": false,
+      "isCaptured": false
+    },
+    {
+      "player": "1",
+      "location": [0, 7],
+      "isKing": false,
+      "isCaptured": false
+    },
+    {
+      "player": "1",
+      "location": [1, 0],
+      "isKing": false,
+      "isCaptured": false
+    },
+    {
+      "player": "1",
+      "location": [1, 2],
+      "isKing": false,
+      "isCaptured": false
+    },
+    {
+      "player": "1",
+      "location": [1, 4],
+      "isKing": false,
+      "isCaptured": false
+    },
+    {
+      "player": "1",
+      "location": [1, 6],
+      "isKing": false,
+      "isCaptured": false
+    },
+    {
+      "player": "1",
+      "location": [2, 1],
+      "isKing": false,
+      "isCaptured": false
+    },
+    {
+      "player": "1",
+      "location": [2, 3],
+      "isKing": false,
+      "isCaptured": false
+    },
+    {
+      "player": "1",
+      "location": [2, 5],
+      "isKing": false,
+      "isCaptured": false
+    },
+    {
+      "player": "1",
+      "location": [2, 7],
+      "isKing": false,
+      "isCaptured": false
+    },
+
+
+    {
+      "player": "2",
+      "location": [5, 0],
+      "isKing": false,
+      "isCaptured": false
+    },
+    {
+      "player": "2",
+      "location": [5, 2],
+      "isKing": false,
+      "isCaptured": false
+    },
+    {
+      "player": "2",
+      "location": [5, 4],
+      "isKing": false,
+      "isCaptured": false
+    },
+    {
+      "player": "2",
+      "location": [5, 6],
+      "isKing": false,
+      "isCaptured": false
+    },
+    {
+      "player": "2",
+      "location": [6, 1],
+      "isKing": false,
+      "isCaptured": false
+    },
+    {
+      "player": "2",
+      "location": [6, 3],
+      "isKing": false,
+      "isCaptured": false
+    },
+    {
+      "player": "2",
+      "location": [6, 5],
+      "isKing": false,
+      "isCaptured": false
+    },
+    {
+      "player": "2",
+      "location": [6, 7],
+      "isKing": false,
+      "isCaptured": false
+    },
+    {
+      "player": "2",
+      "location": [7, 0],
+      "isKing": false,
+      "isCaptured": false
+    },
+    {
+      "player": "2",
+      "location": [7, 2],
+      "isKing": false,
+      "isCaptured": false
+    },
+    {
+      "player": "2",
+      "location": [7, 4],
+      "isKing": false,
+      "isCaptured": false
+    },
+    {
+      "player": "2",
+      "location": [7, 6],
+      "isKing": false,
+      "isCaptured": false
+    },
+  ]);
+
+  return ( 
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <center>
+      <h1>React Checker Game</h1>
+        <CheckerBoard playerPieces={pieces} />
+      </center>
     </div>
   );
 }
