@@ -74,27 +74,31 @@ function CheckerBoard({ playerPieces, setPieces }) {
     let adjacentSpaceLower = startingSpace + 7;
     let adjacentSpaceUpper = startingSpace + 9;
     if (endingSpace == adjacentSpaceLower) {
+      console.log("Moving space to adjacent lower space")
       setPieces(playerPieces.map((piece) => {
         if (piece === playerPiece) {
           let [row, column] = piece.location;
           row = row + 1;
           column = column - 1;
+          console.log("Adjusting piece location: " + row + " " + column);
           piece.location = [row, column];
         }
       }));
     }
     else if (endingSpace == adjacentSpaceUpper) {
+      console.log("Moving space to adjacent upper space")
       setPieces(playerPieces.map((piece) => {
         if (piece === playerPiece) {
           let [row, column] = piece.location;
           row = row + 1;
           column = column + 1;
+          console.log("Adjusting piece location: " + row + " " + column);
           piece.location = [row, column];
         }
       }));
     }
 
-    document.getElementById(startingSpace).removeChild(document.getElementById(startingSpace).children[0]);
+    ReactDOM.unmountComponentAtNode(document.getElementById(startingSpace));
 
     var cells = document.getElementsByTagName("td");
     let checker = React.createElement(Checker, { color: playerPiece.player === "1" ? "red" : "black" }, '');
