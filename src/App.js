@@ -1,12 +1,10 @@
 import CheckerBoard from './Components/CheckerBoard'
 import React, { useState } from 'react';
 
-/* 
- * Player pieces will be an array of piece objects
- * Piece object will be an object with { Player, Location, King, Captured }
- * */
-
 function App() {
+
+  // This is hardcoded for the intializing state of the board 
+  // It will be updated at runtime as the game is played 
   const [pieces, setPieces] = useState([
     {
       "player": "1",

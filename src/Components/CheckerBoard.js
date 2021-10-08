@@ -6,6 +6,7 @@ function CheckerBoard({ playerPieces, setPieces }) {
   let _selectedCell = -1;
   let _playersTurn = 1;
 
+
   function drawBoard() {
     var cells = document.getElementsByTagName("td");
     for (var x = 0; x < cells.length; x++) {
@@ -18,9 +19,9 @@ function CheckerBoard({ playerPieces, setPieces }) {
           let checker = React.createElement(Checker, { color: piece.player === "1" ? "red" : "black" }, '');
           ReactDOM.render(checker, document.getElementById(cells[pieceCell].id));
         }
-
       });
     };
+    console.log("Board Drawn");
   }
 
   function getPlayerPiece(selectedCell) {
@@ -34,13 +35,13 @@ function CheckerBoard({ playerPieces, setPieces }) {
         checkerCell = cellTranslation;
       }
     });
-
     return [playerPiece, checkerCell];
   }
 
   function canPlayerMoveChecker(playerPiece) {
     let isPlayersTurn = parseInt(_playersTurn) === parseInt(playerPiece.player);
     console.log("Selected Current Player's Checker: " + isPlayersTurn);
+    console.log("Current Player: " + _playersTurn);
     return isPlayersTurn;
   }
 
@@ -62,6 +63,9 @@ function CheckerBoard({ playerPieces, setPieces }) {
       else if (selectedCell === upperAdjacentcell.id && upperAdjacentcell.children.length === 0) {
         canPlayerMove = true;
       }
+      else if (canPlayerJump(pieceCell, selectedCell)){
+        canPlayerMove = true;
+      }
 
     }
     else if (parseInt(_playersTurn) === 2) {
@@ -78,11 +82,80 @@ function CheckerBoard({ playerPieces, setPieces }) {
       else if (selectedCell === upperAdjacentcell.id && upperAdjacentcell.children.length === 0) {
         canPlayerMove = true;
       }
+      else if (canPlayerJump(pieceCell, selectedCell)) {
+        canPlayerMove = true;
+      }
     }
 
 
     console.log("Player allowed to move to selected space: " + canPlayerMove);
     return canPlayerMove;
+  }
+
+  function isSpaceVacant(spaceNumber) {
+    return document.getElementById(spaceNumber).children.length == 0;
+  }
+
+  function checkIsSpaceAdjacent(rootSpace, adjacentSpace) {
+    let _adjacentSpace = parseInt(adjacentSpace);
+    return rootSpace + 9 === _adjacentSpace || rootSpace + 7 === _adjacentSpace || rootSpace - 7 === _adjacentSpace || rootSpace - 9 === _adjacentSpace;
+  }
+
+  function canPlayerJump(startingSpace, endingSpace) {
+    let _endingSpace = parseInt(endingSpace);
+    let canJumpLowerAdjacent = false;
+    let canJumpUpperAdjacent = false;
+    let canPlayerJump = false;
+    if (parseInt(_playersTurn) === 1) {
+      let adjacentSpaceLower = startingSpace + 7;
+      let adjacentSpaceUpper = startingSpace + 9;
+      let adjacentCellLower = document.getElementById(adjacentSpaceLower);
+      let adjacentCellUpper = document.getElementById(adjacentSpaceUpper);
+      let adjacentLowerSpaceContainsEnemyPlayer = adjacentCellLower.children.length > 0 && adjacentCellLower.children[0].style.backgroundColor === "black";
+      let adjacentUpperSpaceContainsEnemyPlayer = adjacentCellUpper.children.length > 0 && adjacentCellUpper.children[0].style.backgroundColor === "black";
+
+
+      if (adjacentLowerSpaceContainsEnemyPlayer) {
+        let isEndingSpaceVacant = isSpaceVacant(_endingSpace);
+        let isSpaceAdjacent = checkIsSpaceAdjacent(adjacentSpaceLower, _endingSpace);
+        canJumpLowerAdjacent = (_endingSpace === (parseInt(adjacentCellLower.id) + 7)) && isEndingSpaceVacant && isSpaceAdjacent;
+        console.log("Player 1 allowed to jump lower adjacent: " + canJumpLowerAdjacent + " Space: " + (parseInt(adjacentCellLower.id) + 7) + " Ending Space: " + _endingSpace);
+      }
+
+      if (adjacentUpperSpaceContainsEnemyPlayer) {
+        let isEndingSpaceVacant = isSpaceVacant(_endingSpace);
+        let isSpaceAdjacent = checkIsSpaceAdjacent(adjacentSpaceUpper, _endingSpace);
+        canJumpUpperAdjacent = (_endingSpace === (parseInt(adjacentCellUpper.id) + 9)) && isEndingSpaceVacant && isSpaceAdjacent;
+        console.log("Player 1 allowed to jump upper adjacent: " + canJumpLowerAdjacent + " Space: " + (parseInt(adjacentCellUpper.id) + 9) + " Ending Space: " + _endingSpace);
+      }
+
+      canPlayerJump = canJumpLowerAdjacent || canJumpUpperAdjacent;
+    }
+    else if (parseInt(_playersTurn) === 2) {
+      let adjacentSpaceLower = startingSpace - 7;
+      let adjacentSpaceUpper = startingSpace - 9;
+      let adjacentCellLower = document.getElementById(adjacentSpaceLower);
+      let adjacentCellUpper = document.getElementById(adjacentSpaceUpper);
+      let adjacentLowerSpaceContainsEnemyPlayer = adjacentCellLower.children.length > 0 && adjacentCellLower.children[0].style.backgroundColor === "red";
+      let adjacentUpperSpaceContainsEnemyPlayer = adjacentCellUpper.children.length > 0 && adjacentCellUpper.children[0].style.backgroundColor === "red";
+
+      if (adjacentLowerSpaceContainsEnemyPlayer) {
+        let isEndingSpaceVacant = isSpaceVacant(_endingSpace);
+        let isSpaceAdjacent = checkIsSpaceAdjacent(adjacentSpaceLower, _endingSpace);
+        canJumpLowerAdjacent = (_endingSpace === (parseInt(adjacentCellLower.id) - 7)) && isEndingSpaceVacant && isSpaceAdjacent;
+        console.log("Player 2 allowed to jump lower adjacent: " + canJumpLowerAdjacent + " Space: " + (parseInt(adjacentCellLower.id) - 7) + " Ending Space: " + _endingSpace);
+      }
+
+      if (adjacentUpperSpaceContainsEnemyPlayer) {
+        let isEndingSpaceVacant = isSpaceVacant(_endingSpace);
+        let isSpaceAdjacent = checkIsSpaceAdjacent(adjacentSpaceUpper, _endingSpace);
+        canJumpUpperAdjacent = (_endingSpace === (parseInt(adjacentCellUpper.id) - 9)) && isEndingSpaceVacant && isSpaceAdjacent;
+        console.log("Player 2 allowed to jump upper adjacent: " + canJumpUpperAdjacent + " Space: " + (parseInt(adjacentCellUpper.id) - 9) + " Ending Space: " + _endingSpace);
+      }
+
+      canPlayerJump = canJumpLowerAdjacent || canJumpUpperAdjacent;
+    }
+    return canPlayerJump;
   }
 
   function movePlayer(playerPiece, startingSpace, endingSpace) {
@@ -97,8 +170,10 @@ function CheckerBoard({ playerPieces, setPieces }) {
         setPieces(playerPieces.map((piece) => {
           if (piece === playerPiece) {
             let [row, column] = piece.location;
+            console.log("DEBUG: " + row + " " + column);
             row = row + 1;
             column = column - 1;
+            console.log("DEBUG: " + row + " " + column);
             console.log("Adjusting piece location: " + row + " " + column);
             piece.location = [row, column];
             playerWasMoved = true;
@@ -111,11 +186,46 @@ function CheckerBoard({ playerPieces, setPieces }) {
         setPieces(playerPieces.map((piece) => {
           if (piece === playerPiece) {
             let [row, column] = piece.location;
+            console.log("DEBUG: " + row + " " + column);
             row = row + 1;
             column = column + 1;
+            console.log("DEBUG: " + row + " " + column);
             console.log("Adjusting piece location: " + row + " " + column);
             piece.location = [row, column];
             playerWasMoved = true;
+          }
+          return piece;
+        }));
+      }
+      else if (canPlayerJump(startingSpace, endingSpace)) {
+        console.log("Jumping Player");
+        setPieces(playerPieces.map((piece) => {
+          if (piece === playerPiece) {
+            let [row, column] = piece.location;
+            console.log("DEBUG: " + row + " " + column);
+            var tempStartPosition = startingSpace - (row * 8)
+            row = Math.floor(endingSpace / 8);
+            var tempEndPosition = endingSpace - (row * 8);
+            column = column + ((tempEndPosition > tempStartPosition) ? 2 : -2);
+            console.log("DEBUG: " + row + " " + column);
+            console.log("Adjusting piece location: " + row + " " + column);
+            piece.location = [row, column];
+            playerWasMoved = true;
+
+
+            let adjacentSpaceLower = startingSpace + 7;
+            let adjacentSpaceUpper = startingSpace + 9;
+            let adjacentCellLower = document.getElementById(adjacentSpaceLower);
+            let adjacentCellUpper = document.getElementById(adjacentSpaceUpper);
+            let adjacentLowerSpaceContainsEnemyPlayer = adjacentCellLower.children.length > 0 && adjacentCellLower.children[0].style.backgroundColor === "black";
+            let adjacentUpperSpaceContainsEnemyPlayer = adjacentCellUpper.children.length > 0 && adjacentCellUpper.children[0].style.backgroundColor === "black";
+
+            if ((tempEndPosition < tempStartPosition) && adjacentLowerSpaceContainsEnemyPlayer) {
+              ReactDOM.unmountComponentAtNode(adjacentCellLower);
+            }
+            else if ((tempEndPosition > tempStartPosition) && adjacentUpperSpaceContainsEnemyPlayer) {
+              ReactDOM.unmountComponentAtNode(adjacentCellUpper);
+            }
           }
           return piece;
         }));
@@ -130,8 +240,10 @@ function CheckerBoard({ playerPieces, setPieces }) {
         setPieces(playerPieces.map((piece) => {
           if (piece === playerPiece) {
             let [row, column] = piece.location;
+            console.log("DEBUG: " + row + " " + column);
             row = row - 1;
             column = column + 1;
+            console.log("DEBUG: " + row + " " + column);
             console.log("Adjusting piece location: " + row + " " + column);
             piece.location = [row, column];
             playerWasMoved = true;
@@ -144,8 +256,10 @@ function CheckerBoard({ playerPieces, setPieces }) {
         setPieces(playerPieces.map((piece) => {
           if (piece === playerPiece) {
             let [row, column] = piece.location;
+            console.log("DEBUG: " + row + " " + column);
             row = row - 1;
             column = column - 1;
+            console.log("DEBUG: " + row + " " + column);
             console.log("Adjusting piece location: " + row + " " + column);
             piece.location = [row, column];
             playerWasMoved = true;
@@ -153,9 +267,42 @@ function CheckerBoard({ playerPieces, setPieces }) {
           return piece;
         }));
       }
+      else if (canPlayerJump(startingSpace, endingSpace)) {
+        console.log("Jumping Player");
+        setPieces(playerPieces.map((piece) => {
+          if (piece === playerPiece) {
+            let [row, column] = piece.location;
+            console.log("DEBUG: " + row + " " + column);
+            var tempStartPosition = startingSpace - (row * 8)
+            row = Math.floor(endingSpace / 8);
+            var tempEndPosition = endingSpace - (row * 8);
+
+            column = column + ((tempEndPosition > tempStartPosition) ? 2 : -2);
+            console.log("DEBUG: " + row + " " + column);
+            console.log("Adjusting piece location: " + row + " " + column);
+            piece.location = [row, column];
+            playerWasMoved = true;
+
+
+            let adjacentSpaceLower = startingSpace - 7;
+            let adjacentSpaceUpper = startingSpace - 9;
+            let adjacentCellLower = document.getElementById(adjacentSpaceLower);
+            let adjacentCellUpper = document.getElementById(adjacentSpaceUpper);
+            let adjacentLowerSpaceContainsEnemyPlayer = adjacentCellLower.children.length > 0 && adjacentCellLower.children[0].style.backgroundColor === "red";
+            let adjacentUpperSpaceContainsEnemyPlayer = adjacentCellUpper.children.length > 0 && adjacentCellUpper.children[0].style.backgroundColor === "red";
+
+            if ((tempEndPosition > tempStartPosition) && adjacentLowerSpaceContainsEnemyPlayer) {
+              ReactDOM.unmountComponentAtNode(adjacentCellLower);
+            }
+            else if ((tempEndPosition < tempStartPosition) && adjacentUpperSpaceContainsEnemyPlayer) {
+              ReactDOM.unmountComponentAtNode(adjacentCellUpper);
+            }
+          }
+          return piece;
+        }));
+      }
     }
     
-
     ReactDOM.unmountComponentAtNode(document.getElementById(startingSpace));
 
     var cells = document.getElementsByTagName("td");
@@ -226,9 +373,10 @@ function CheckerBoard({ playerPieces, setPieces }) {
             _selectedCell = -1;
 
             _playersTurn = _playersTurn === 1 ? 2 : 1;
-            console.log("Player changed to player: " + _playersTurn);
+            document.getElementById("player-turn-field").innerHTML = _playersTurn;
+            console.log("Player changed to player:  " +  _playersTurn );
           }
-        }
+        } 
       }
     }
   }
@@ -245,7 +393,9 @@ function CheckerBoard({ playerPieces, setPieces }) {
 
   return (
     <div>
-      <button id="start-button" className="start-button" onClick={startGame}>Start Game</button>
+
+      <span className="game-header"><h2 className="player-indicator">Current Player's Turn: <span id="player-turn-field"> {_playersTurn}</span></h2><button id="start-button" className="start-button" onClick={startGame}>Start Game</button></span>
+
       <table>
         <tbody>
           <tr id="row-0" className="even-row"><td className="even-space"></td><td className="odd-space"></td><td className="even-space"></td><td className="odd-space"></td><td className="even-space"></td><td className="odd-space"></td><td className="even-space"></td><td className="odd-space"></td></tr>

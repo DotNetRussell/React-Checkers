@@ -64,3 +64,11 @@ td {
     background-color: greenyellow;
     margin: 5px;
 }
+
+.player-indicator {
+    color: forestgreen;
+}
+
+.game-header {
+    white-space: nowrap;
+}
